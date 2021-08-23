@@ -25,16 +25,16 @@ def ping():
 
 
 @app.post("/env", status_code=201)
-def api_post_env_create(config: Dict[str, Any]):
+def api_post_env_create(gym_name: str, config: Optional[Dict[str, Any]]=None):
     "Create environment based on the OpenAI Gym"
     global global_env
-    env_name: Optional[str] = config.get('env_name')
-    if env_name is None:
-        raise HTTPException(400, "Requires passing 'env_name' key to setup environment")
-    elif ":" not in env_name:
-        raise HTTPException(400, "Expected 'env_name' to contain '{core}:{gym_name}', e.g. 'butterfly:prison_v3'")
+    # gym_name: Optional[str] = config.get('gym_name')
+    if gym_name is None:
+        raise HTTPException(400, "Requires passing 'gym_name' key to setup environment")
+    elif ":" not in gym_name:
+        raise HTTPException(400, "Expected 'gym_name' to contain '{core}:{gym_name}', e.g. 'butterfly:prison_v3'")
     
-    core, gym_name = env_name.split(":")
+    core, gym_name = gym_name.split(":")
     env_maker = importlib.import_module(f"pettingzoo.{core}.{gym_name}")
 
     global_env = env_maker.env()
@@ -53,8 +53,8 @@ def api_post_env_reset(seed: Optional[int] = None, env = Depends(get_env)) -> Ob
 def api_post_env_step(env_action: EnvActionType, env = Depends(get_env)):
     "Provides information necessary to step the environment."
     global last_action
-    if env_action.actor_name != env.agent_selection:
-        raise HTTPException(400, f"Expected actor to be '{env.agent_selection}' but passed '{env_action.actor_name}'")
+    if env_action.agent_name != env.agent_selection:
+        raise HTTPException(400, f"Expected actor to be '{env.agent_selection}' but passed '{env_action.agent_name}'")
 
     last_action = env_action.actions
     if env_action.commit:
@@ -78,8 +78,14 @@ def get_last(env = Depends(get_env)) -> EnvStepType:
     reward = last_step[1]
     done = last_step[2]
     info = last_step[3]
-    actor_name = env.agent_selection
-    return EnvStepType(observation=obs, reward=reward, done=done, info=info, actor_name=actor_name)
+    agent_name = env.agent_selection
+    return EnvStepType(observation=obs, reward=reward, done=done, info=info, agent_name=agent_name)
+
+
+@app.get('/env/agent', response_model=str)
+def get_env_agent_current(env = Depends(get_env)) -> str:
+    """Returns name of currently expected agent."""
+    return env.agent_selection
 
 
 @app.post('/env/seed')

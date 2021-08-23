@@ -21,7 +21,7 @@ ObservationType = NumericalList
 
 
 class EnvStepType(BaseModel):
-    actor_name: str
+    agent_name: str
     observation: ObservationType
     reward: float
     done: bool
@@ -29,7 +29,7 @@ class EnvStepType(BaseModel):
 
 
 class EnvActionType(BaseModel):
-    actor_name: str
+    agent_name: str
     actions: ActionType
     commit: bool = False
 

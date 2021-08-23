@@ -34,12 +34,12 @@ def extract_space_info(space) -> Dict[str, Any]:
             dtype=str(space.dtype),
             shape=[1],
             low=0,
-            high=space.n - 1,  # Inclusive bounds, so n=2 -> [0,1]
+            high=(space.n - 1),  # Inclusive bounds, so n=2 -> [0,1]
         )
     else:
         return dict(
-            low = consolidate_value(space.low),
-            high = consolidate_value(space.high),
-            shape = space.shape,
-            dtype = str(space.dtype),
+            low=consolidate_value(space.low),
+            high=consolidate_value(space.high),
+            shape=space.shape,
+            dtype=str(space.dtype),
         )
