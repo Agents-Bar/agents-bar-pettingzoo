@@ -1,5 +1,5 @@
 FROM python:3.8-slim as base
-RUN apt-get update && apt-get install -y build-essential
+RUN apt-get update && apt-get install -y build-essential swig
 
 RUN pip install --user pip==21.2.4 \
                 uvicorn~=0.13.4 fastapi~=0.63.0 pydantic~=1.7.3 requests~=2.25.1 \

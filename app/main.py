@@ -40,6 +40,10 @@ def api_post_env_create(gym_name: str, config: Optional[Dict[str, Any]]=None):
     global_env = env_maker.env()
     if global_env is None:
         raise HTTPException(500, "Failed to create environment")
+    
+    # PettingZoo requires reset after initialization so that config is populated
+    global_env.reset()
+
     return str(global_env)
 
 
