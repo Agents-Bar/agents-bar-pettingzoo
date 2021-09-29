@@ -2,5 +2,5 @@ uvicorn~=0.15.0
 fastapi~=0.68.1
 pydantic~=1.7.3
 requests~=2.25.1
-pillow==8.3.1
+pillow==8.3.2
 pettingzoo[all]~=1.11.0
