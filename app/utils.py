@@ -1,13 +1,17 @@
+from typing import Any, Dict, List
+
 import gym
 import numpy
 
-from typing import Any, Dict, List
 
 def to_list(obj: object) -> List:
     if isinstance(obj, list):
         return obj
     elif isinstance(obj, numpy.ndarray):
-        return obj.tolist()
+        # IF is requires because np.array(2) has shape () and .tolist() returns int(2)
+        return obj.tolist() if obj.shape else [obj.item()]
+    elif isinstance(obj, (int, float, str)):
+        return [obj]
 
     # Just try...
     return list(obj)

@@ -38,5 +38,5 @@ class EnvInfo(BaseModel):
     observation_space: Dict
     action_space: Dict
     num_agents: int
-    actor_names: List[str]
+    agent_names: List[str]
     reward_range: Optional[Tuple[float, float]]

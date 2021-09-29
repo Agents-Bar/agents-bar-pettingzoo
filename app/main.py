@@ -62,7 +62,10 @@ def api_post_env_step(env_action: EnvActionType, env = Depends(get_env)):
 
     last_action = env_action.actions
     if env_action.commit:
-        return env_commit_action()
+        try:
+            return env_commit_action()
+        except Exception as e:
+            raise HTTPException(400, detail="Couldn't step environment. Reason:\n" + str(e))
     return None
 
 
@@ -114,7 +117,7 @@ def api_get_env_info(env = Depends(get_env)) -> EnvInfo:
         observation_space={k: extract_space_info(v) for (k, v) in env.observation_spaces.items()},
         action_space={k: extract_space_info(v) for (k, v) in env.action_spaces.items()},
         num_agents=env.num_agents,
-        actor_names=env.agents,
+        agent_names=env.agents,
         reward_range=None
     )
     return info
